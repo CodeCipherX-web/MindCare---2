@@ -71,7 +71,7 @@ const SUPABASE_ANON_KEY = process.env.SUPABASE_ANON_KEY || process.env.SUPABASE_
     if (error) {
       if (error.code === 'PGRST116' || error.message?.includes('relation') || error.message?.includes('does not exist')) {
         console.log('⚠️  Database tables not found. Please run the SQL schema in your Supabase SQL Editor.');
-        console.log('💡 Run the SQL from db/supabase-schema.sql in your Supabase dashboard.');
+        console.log('💡 Run the SQL from supabase-schema.sql in your Supabase dashboard.');
         console.log('💡 The server will continue to run, but database operations will fail until tables are created.');
       } else {
         throw error;
@@ -399,7 +399,7 @@ app.post('/api/auth/signup', async (req, res) => {
     if (usernameError && usernameError.code === 'PGRST116') {
       return res.status(500).json({ 
         success: false, 
-        error: 'Database table "users" not found. Please run the SQL schema (db/supabase-schema.sql) in your Supabase SQL Editor.'
+        error: 'Database table "users" not found. Please run the SQL schema (supabase-schema.sql) in your Supabase SQL Editor.'
       });
     }
 
@@ -412,7 +412,7 @@ app.post('/api/auth/signup', async (req, res) => {
     if (emailError && emailError.code === 'PGRST116') {
       return res.status(500).json({ 
         success: false, 
-        error: 'Database table "users" not found. Please run the SQL schema (db/supabase-schema.sql) in your Supabase SQL Editor.'
+        error: 'Database table "users" not found. Please run the SQL schema (supabase-schema.sql) in your Supabase SQL Editor.'
       });
     }
 
@@ -1010,20 +1010,21 @@ app.get('/api/health', (req, res) => {
 });
 
 // ---------------- Static Files (After API routes) ----------------
-app.use(express.static(path.join(__dirname, 'public')));
+// Serve static files from root directory (CSS, JS, images, etc.)
+app.use(express.static(__dirname));
 
 // ---------------- HTML Routes ----------------
-const viewsPath = path.join(__dirname, 'views');
-app.get('/', (req, res) => res.sendFile(path.join(viewsPath, 'index.html')));
-app.get('/resources', (req, res) => res.sendFile(path.join(viewsPath, 'resources.html')));
-app.get('/chatbot', (req, res) => res.sendFile(path.join(viewsPath, 'chatbot.html')));
-app.get('/mood-tracker', (req, res) => res.sendFile(path.join(viewsPath, 'mood-tracker.html')));
-app.get('/contact', (req, res) => res.sendFile(path.join(viewsPath, 'contact.html')));
-app.get('/therapists', (req, res) => res.sendFile(path.join(viewsPath, 'therapists.html')));
-app.get('/login', (req, res) => res.sendFile(path.join(viewsPath, 'login.html')));
-app.get('/signup', (req, res) => res.sendFile(path.join(viewsPath, 'signup.html')));
-app.get('/journal', (req, res) => res.sendFile(path.join(viewsPath, 'journal.html')));
-app.get('/journal-folder', (req, res) => res.sendFile(path.join(viewsPath, 'journal-folder.html')));
+// Serve HTML files from root directory
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'index.html')));
+app.get('/resources', (req, res) => res.sendFile(path.join(__dirname, 'resources.html')));
+app.get('/chatbot', (req, res) => res.sendFile(path.join(__dirname, 'chatbot.html')));
+app.get('/mood-tracker', (req, res) => res.sendFile(path.join(__dirname, 'mood-tracker.html')));
+app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'contact.html')));
+app.get('/therapists', (req, res) => res.sendFile(path.join(__dirname, 'therapists.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
+app.get('/signup', (req, res) => res.sendFile(path.join(__dirname, 'signup.html')));
+app.get('/journal', (req, res) => res.sendFile(path.join(__dirname, 'journal.html')));
+app.get('/journal-folder', (req, res) => res.sendFile(path.join(__dirname, 'journal-folder.html')));
 
 // ---------------- Health Check ----------------
 app.get('/health', async (req, res) => {
